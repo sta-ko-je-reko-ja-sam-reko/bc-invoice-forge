@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:ID>PINV-XML-9001</cbc:ID>
+  <cbc:IssueDate>2026-07-10</cbc:IssueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="0088">7300010000001</cbc:EndpointID>
+      <cac:PartyIdentification>
+        <cbc:ID>V20000</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>Acme Supplies</cbc:Name>
+      </cac:PartyName>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">10</cbc:InvoicedQuantity>
+    <cac:Item>
+      <cbc:Name>Raw material</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>ITEM-C</cbc:ID>
+      </cac:SellersItemIdentification>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">3.25</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">100</cbc:InvoicedQuantity>
+    <cac:Item>
+      <cbc:Name>Packaging</cbc:Name>
+      <cac:SellersItemIdentification>
+        <cbc:ID>ITEM-D</cbc:ID>
+      </cac:SellersItemIdentification>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">0.40</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

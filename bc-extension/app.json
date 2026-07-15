@@ -1,0 +1,19 @@
+{
+  "id": "a1b2c3d4-0000-4000-8000-000000000001",
+  "name": "BC Invoice Forge",
+  "publisher": "bc-invoice-forge",
+  "version": "0.1.0.0",
+  "brief": "Bulk import + server-side batch posting for high-volume invoices",
+  "description": "API pages and a BatchPost codeunit that posts large sets of sales, purchase, and service invoices server-side, triggered by the external orchestrator.",
+  "platform": "24.0.0.0",
+  "application": "24.0.0.0",
+  "runtime": "13.0",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 50099
+    }
+  ],
+  "dependencies": [],
+  "features": ["NoImplicitWith"]
+}

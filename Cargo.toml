@@ -1,0 +1,31 @@
+# Workspace root for the Rust side of bc-invoice-forge.
+# Two crates: `ingestion` (parse/validate/stage) and `orchestrator` (drive BC APIs).
+[workspace]
+resolver = "2"
+members = [
+    "ingestion",
+    "orchestrator",
+]
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+authors = ["bc-invoice-forge"]
+
+# Shared dependency versions so both crates stay in lockstep.
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+csv = "1"
+quick-xml = "0.36"
+lopdf = "0.34"
+thiserror = "2"
+anyhow = "1"
+async-trait = "0.1"
+blake3 = "1"
+futures = "0.3"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "tls-rustls", "postgres", "migrate"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "multipart"] }
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

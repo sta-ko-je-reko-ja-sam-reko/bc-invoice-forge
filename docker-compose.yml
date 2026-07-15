@@ -1,0 +1,15 @@
+# Local dev: Postgres for the ingestion staging store.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: forge
+      POSTGRES_PASSWORD: forge
+      POSTGRES_DB: forge
+    ports:
+      - "5432:5432"
+    volumes:
+      - forge_pg:/var/lib/postgresql/data
+
+volumes:
+  forge_pg:
