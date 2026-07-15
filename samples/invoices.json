@@ -1,0 +1,33 @@
+[
+  {
+    "docType": "sales",
+    "externalDocumentNo": "INV-JSON-1001",
+    "partnerNo": "C10000",
+    "documentDate": "2026-07-10",
+    "currencyCode": "EUR",
+    "lines": [
+      { "no": "ITEM-A", "description": "Widget A", "quantity": 2, "unitPrice": 15.5 },
+      { "no": "ITEM-B", "description": "Widget B", "quantity": 1, "unitPrice": 40.0 }
+    ]
+  },
+  {
+    "docType": "purchase",
+    "externalDocumentNo": "PINV-JSON-5001",
+    "partnerNo": "V20000",
+    "documentDate": "2026-07-09",
+    "currencyCode": "USD",
+    "lines": [
+      { "no": "ITEM-C", "description": "Raw material", "quantity": 10, "unitPrice": 3.25 }
+    ]
+  },
+  {
+    "docType": "service",
+    "externalDocumentNo": "SINV-JSON-9001",
+    "partnerNo": "C10001",
+    "documentDate": "2026-07-11",
+    "currencyCode": "EUR",
+    "lines": [
+      { "no": "RES-1", "description": "Consulting hour", "quantity": 8, "unitPrice": 120.0 }
+    ]
+  }
+]

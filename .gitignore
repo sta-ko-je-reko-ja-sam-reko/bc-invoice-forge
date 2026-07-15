@@ -1,0 +1,24 @@
+# Rust
+/target
+**/target
+Cargo.lock
+
+# AL / Business Central
+bc-extension/.alpackages/
+bc-extension/.snapshots/
+bc-extension/*.app
+bc-extension/rad.json
+.altestrunner/
+
+# Secrets & local env
+.env
+*.env
+!*.env.example
+secrets/
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db

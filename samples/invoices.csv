@@ -1,0 +1,7 @@
+doc_type,external_document_no,partner_no,document_date,currency_code,item_no,description,quantity,unit_price
+sales,INV-1001,C10000,2026-07-10,EUR,ITEM-A,Widget A,2,15.50
+sales,INV-1001,C10000,2026-07-10,EUR,ITEM-B,Widget B,1,40.00
+sales,INV-1002,C10000,2026-07-10,EUR,ITEM-A,Widget A,5,15.50
+purchase,PINV-5001,V20000,2026-07-09,USD,ITEM-C,Raw material,10,3.25
+purchase,PINV-5002,V20001,2026-07-09,USD,ITEM-D,Packaging,100,0.40
+service,SINV-9001,C10001,2026-07-11,EUR,RES-1,Consulting hour,8,120.00
