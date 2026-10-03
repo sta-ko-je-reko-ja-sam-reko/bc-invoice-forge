@@ -1,7 +1,7 @@
 // Lets the orchestrator stamp the batch code onto an already-imported purchase
 // invoice (the standard purchaseInvoices API doesn't expose the custom field).
 // PATCH by systemId after import.
-page 50003 "BIF Purch Invoice Tag"
+page 75003 "BIF Purch Invoice Tag"
 {
     PageType = API;
     APIPublisher = 'bif';

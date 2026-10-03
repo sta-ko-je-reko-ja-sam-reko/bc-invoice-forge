@@ -61,7 +61,7 @@ orchestrator/                      Rust bin
     throttle.rs       AdaptiveLimiter (AIMD: halve on 429, +1 per 20 ok)
     validate.rs       validate_document (fields + ref_entity checks)
 
-bc-extension/                      AL (range 50000–50099)
+bc-extension/                      AL (range 75000–78999)
   app.json
   src/
     IDocumentPoster.Interface.al   interface "BIF IDocument Poster"
@@ -84,21 +84,21 @@ docs/ architecture.md · verification.md · benchmarking.md · project-state.md
 samples/ invoices.csv · invoices.json · ubl-invoice.xml · invoice.edi · party-map.csv · item-map.csv
 ```
 
-## 4. AL object inventory (range 50000–50099; per-type namespaces)
+## 4. AL object inventory (range 75000–78999; per-type namespaces)
 
 - Interface: `BIF IDocument Poster`
-- Enums: 50000 `BIF Doc Type` (implements interface), 50001 `BIF Job Status`
-- Tables: 50000 `BIF Batch Post Job`, 50001 `BIF Post Result`
-- Codeunits: 50000 Batch Post, 50001 Batch Post Runner, 50002 Post Log,
-  50003 Sales Poster, 50004 Purchase Poster, 50005 Service Poster,
-  50006 Purch Order Poster, 50007 Prod Order Poster, 50008 Assembly Poster,
-  50009 Transfer Poster
-- Pages (API): 50000 batchPostJobs, 50001 postResults, 50002 salesInvoiceTags,
-  50003 purchaseInvoiceTags, 50004 serviceInvoices, 50005 serviceInvoiceLines,
-  50006 purchaseOrders, 50007 purchaseOrderLines, 50008 assemblyOrders,
-  50009 productionOrders, 50010 transferOrders, 50011 transferOrderLines
-- Table extensions: 50000 Sales Header, 50001 Purchase Header, 50002 Service
-  Header, 50003 Production Order, 50004 Assembly Header, 50005 Transfer Header
+- Enums: 75000 `BIF Doc Type` (implements interface), 75001 `BIF Job Status`
+- Tables: 75000 `BIF Batch Post Job`, 75001 `BIF Post Result`
+- Codeunits: 75000 Batch Post, 75001 Batch Post Runner, 75002 Post Log,
+  75003 Sales Poster, 75004 Purchase Poster, 75005 Service Poster,
+  75006 Purch Order Poster, 75007 Prod Order Poster, 75008 Assembly Poster,
+  75009 Transfer Poster
+- Pages (API): 75000 batchPostJobs, 75001 postResults, 75002 salesInvoiceTags,
+  75003 purchaseInvoiceTags, 75004 serviceInvoices, 75005 serviceInvoiceLines,
+  75006 purchaseOrders, 75007 purchaseOrderLines, 75008 assemblyOrders,
+  75009 productionOrders, 75010 transferOrders, 75011 transferOrderLines
+- Table extensions: 75000 Sales Header, 75001 Purchase Header, 75002 Service
+  Header, 75003 Production Order, 75004 Assembly Header, 75005 Transfer Header
 
 ## 5. Decisions & clarifications from the user
 

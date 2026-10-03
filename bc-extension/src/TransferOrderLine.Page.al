@@ -1,5 +1,5 @@
 // Custom import API for transfer order lines (linked by document number).
-page 50011 "BIF Transfer Order Line"
+page 75011 "BIF Transfer Order Line"
 {
     PageType = API;
     APIPublisher = 'bif';

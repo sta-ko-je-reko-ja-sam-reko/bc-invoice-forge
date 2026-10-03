@@ -1,5 +1,5 @@
 // Lifecycle of a batch-post job, polled by the orchestrator for reconciliation.
-enum 50001 "BIF Job Status"
+enum 75001 "BIF Job Status"
 {
     Extensible = true;
 

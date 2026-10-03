@@ -1,7 +1,7 @@
 // Small custom API that lets the orchestrator stamp the batch code onto an
 // already-imported sales invoice (the standard salesInvoices API doesn't expose
 // the custom "BIF Batch Code" field). PATCH by systemId after import.
-page 50002 "BIF Sales Invoice Tag"
+page 75002 "BIF Sales Invoice Tag"
 {
     PageType = API;
     APIPublisher = 'bif';

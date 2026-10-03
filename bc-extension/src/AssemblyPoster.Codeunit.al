@@ -1,5 +1,5 @@
 // Posts assembly orders via the standard Assembly-Post codeunit.
-codeunit 50008 "BIF Assembly Poster" implements "BIF IDocument Poster"
+codeunit 75008 "BIF Assembly Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var

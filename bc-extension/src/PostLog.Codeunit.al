@@ -1,5 +1,5 @@
 // Shared per-document result logging, used by every poster.
-codeunit 50002 "BIF Post Log"
+codeunit 75002 "BIF Post Log"
 {
     procedure Log(BatchCode: Code[20]; SourceDocNo: Code[35]; Success: Boolean; ErrorMsg: Text)
     var

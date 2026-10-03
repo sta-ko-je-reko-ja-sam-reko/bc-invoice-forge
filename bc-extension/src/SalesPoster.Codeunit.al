@@ -1,5 +1,5 @@
 // Posts sales invoices via the standard Sales-Post codeunit.
-codeunit 50003 "BIF Sales Poster" implements "BIF IDocument Poster"
+codeunit 75003 "BIF Sales Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var

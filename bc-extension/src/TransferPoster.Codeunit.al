@@ -1,6 +1,6 @@
 // Posts transfer orders: ship, then receive, via the standard transfer posting
 // codeunits. Both run in one TryFunction so a failure rolls the pair back.
-codeunit 50009 "BIF Transfer Poster" implements "BIF IDocument Poster"
+codeunit 75009 "BIF Transfer Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var

@@ -1,6 +1,6 @@
 // Custom import API for transfer order headers. Requires from/to/in-transit
 // location setup in BC. Templated — confirm for your version.
-page 50010 "BIF Transfer Order"
+page 75010 "BIF Transfer Order"
 {
     PageType = API;
     APIPublisher = 'bif';

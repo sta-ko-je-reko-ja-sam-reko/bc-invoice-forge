@@ -1,6 +1,6 @@
 // Custom import API for assembly order headers. Setting Item No. + Quantity
 // explodes the assembly BOM into lines. Templated — confirm for your version.
-page 50008 "BIF Assembly Order"
+page 75008 "BIF Assembly Order"
 {
     PageType = API;
     APIPublisher = 'bif';

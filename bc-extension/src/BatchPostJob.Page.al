@@ -4,7 +4,7 @@
 //   POST .../batchPostJobs({id})/Microsoft.NAV.run
 // `run` starts a background session and returns immediately; the orchestrator
 // polls Status / Posted Count / Failed Count for reconciliation.
-page 50000 "BIF Batch Post Job"
+page 75000 "BIF Batch Post Job"
 {
     PageType = API;
     APIPublisher = 'bif';
