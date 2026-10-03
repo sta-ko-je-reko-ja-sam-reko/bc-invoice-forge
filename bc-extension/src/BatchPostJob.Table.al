@@ -1,6 +1,6 @@
 // One batch-post job. The orchestrator inserts a row (via the API page),
 // triggers it, then polls Status / Posted Count / Failed Count.
-table 50000 "BIF Batch Post Job"
+table 75000 "BIF Batch Post Job"
 {
     DataClassification = CustomerContent;
     Caption = 'BIF Batch Post Job';

@@ -2,7 +2,7 @@
 // ⚠️ After insert, a real flow must run "Refresh Production Order" to create the
 // order's lines/components/routing. That refresh is not done here (it needs a
 // bound action or a subscriber) — TODO for Phase 4b hardening. Templated fields.
-page 50009 "BIF Production Order"
+page 75009 "BIF Production Order"
 {
     PageType = API;
     APIPublisher = 'bif';

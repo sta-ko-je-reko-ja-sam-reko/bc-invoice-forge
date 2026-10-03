@@ -1,6 +1,6 @@
 // Posts service invoices via Service-Post. NOTE: the Service-Post API is
 // version-sensitive; confirm PostWithLines for your BC version.
-codeunit 50005 "BIF Service Poster" implements "BIF IDocument Poster"
+codeunit 75005 "BIF Service Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var

@@ -1,6 +1,6 @@
 // Read-only API exposing per-document posting outcomes. The orchestrator polls
 // this (filtered by batchCode) to update staging status per invoice.
-page 50001 "BIF Post Result"
+page 75001 "BIF Post Result"
 {
     PageType = API;
     APIPublisher = 'bif';

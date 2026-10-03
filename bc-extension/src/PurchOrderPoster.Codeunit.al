@@ -1,5 +1,5 @@
 // Posts purchase orders (receive + invoice) via the standard Purch.-Post codeunit.
-codeunit 50006 "BIF Purch Order Poster" implements "BIF IDocument Poster"
+codeunit 75006 "BIF Purch Order Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var

@@ -1,6 +1,6 @@
 // Per-document outcome of a batch-post run. The orchestrator reads this back
 // (via the result API page) to update staging status per invoice.
-table 50001 "BIF Post Result"
+table 75001 "BIF Post Result"
 {
     DataClassification = CustomerContent;
     Caption = 'BIF Post Result';

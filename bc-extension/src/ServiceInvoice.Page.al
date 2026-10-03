@@ -1,7 +1,7 @@
 // Custom import API for service invoice headers (no standard automation entity
 // exists). The orchestrator POSTs a header here; Document Type defaults to
 // Invoice and the No. is assigned from the service number series on insert.
-page 50004 "BIF Service Invoice"
+page 75004 "BIF Service Invoice"
 {
     PageType = API;
     APIPublisher = 'bif';

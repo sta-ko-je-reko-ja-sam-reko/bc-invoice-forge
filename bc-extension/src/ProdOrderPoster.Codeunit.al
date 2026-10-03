@@ -5,7 +5,7 @@
 // as a starting point — ADAPT to your output-posting process. Whatever the
 // standard posting path, your Quality app's subscribers fire and create Quality
 // Orders. Confirm the `Prod. Order Status Management` signature for your version.
-codeunit 50007 "BIF Prod Order Poster" implements "BIF IDocument Poster"
+codeunit 75007 "BIF Prod Order Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var

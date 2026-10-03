@@ -30,7 +30,7 @@ generic multi-document engine (invoices + orders).
 - `orchestrator/` (Rust bin) — OAuth2 to BC, resolve master data, adaptive-
   concurrent import, per-chunk server-side posting, reconcile, error store.
 - `bc-extension/` (AL) — interface-dispatched posters (one per doc kind), custom
-  API pages, batch-post job + result tables. Object range **50000–50099**.
+  API pages, batch-post job + result tables. Object range **75000–78999**.
 - Postgres = staging + error store + reference data + mappings (NOT accounting).
 
 Full flow, file map, and object inventory: [docs/project-state.md](docs/project-state.md).
@@ -79,7 +79,7 @@ Design rationale: [docs/architecture.md](docs/architecture.md).
 
 - Rust: `Document`/`DocumentLine` are the real types; `Invoice`/`InvoiceLine`
   are back-compat aliases. sqlx uses runtime queries (no compile-time DB needed).
-- AL objects are `BIF`-prefixed, range 50000–50099. Posting always via standard
+- AL objects are `BIF`-prefixed, range 75000–78999. Posting always via standard
   codeunits. New doc kind → implement `interface "BIF IDocument Poster"`.
 - Config is env-driven (see `.env.example`). Tuning knobs: `IMPORT_CONCURRENCY`
   (ceiling; adaptive limiter backs off on 429), `IMPORT_CHUNK_SIZE`,

@@ -1,7 +1,7 @@
 // Custom import API for service invoice lines. The orchestrator POSTs each line
 // referencing its header by document number; Document Type defaults to Invoice
 // and Line No. is auto-assigned.
-page 50005 "BIF Service Invoice Line"
+page 75005 "BIF Service Invoice Line"
 {
     PageType = API;
     APIPublisher = 'bif';

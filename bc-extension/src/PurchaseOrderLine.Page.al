@@ -1,5 +1,5 @@
 // Custom import API for purchase order lines (linked by document number).
-page 50007 "BIF Purchase Order Line"
+page 75007 "BIF Purchase Order Line"
 {
     PageType = API;
     APIPublisher = 'bif';

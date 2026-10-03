@@ -27,11 +27,11 @@ Each poster collects its documents (filtered by `BIF Batch Code`), posts each in
 an isolated `[TryFunction]`, and logs the outcome via `BIF Post Log` →
 `BIF Post Result`.
 
-## Object inventory (range 50000–50099)
+## Object inventory (range 75000–78999)
 
 - **Interface**: `BIF IDocument Poster`
 - **Enum**: `BIF Doc Type` (implements the interface), `BIF Job Status`
-- **Codeunits**: `BIF Batch Post`, `BIF Batch Post Runner`, `BIF Post Log`, and 7 posters (50003–50009)
+- **Codeunits**: `BIF Batch Post`, `BIF Batch Post Runner`, `BIF Post Log`, and 7 posters (75003–75009)
 - **Tables**: `BIF Batch Post Job`, `BIF Post Result`
 - **Pages (API)**: `batchPostJobs` (+ `run` action), `postResults`, `salesInvoiceTags`, `purchaseInvoiceTags`, `serviceInvoices`(+lines), and order-creation APIs `purchaseOrders`(+lines), `assemblyOrders`, `productionOrders`, `transferOrders`(+lines)
 - **Table extensions** (`BIF Batch Code` + `BIF Source Doc No.`): Sales/Purchase/Service headers, Production Order, Assembly Header, Transfer Header

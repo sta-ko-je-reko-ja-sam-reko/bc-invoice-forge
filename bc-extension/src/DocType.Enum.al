@@ -1,7 +1,7 @@
 // Document kind a batch-post job targets. Each value maps to its poster via the
 // "BIF IDocument Poster" interface, so the dispatcher (BIF Batch Post) is
 // generic — adding a kind = add a value here + a poster codeunit.
-enum 50000 "BIF Doc Type" implements "BIF IDocument Poster"
+enum 75000 "BIF Doc Type" implements "BIF IDocument Poster"
 {
     Extensible = true;
 

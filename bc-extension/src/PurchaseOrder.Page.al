@@ -1,6 +1,6 @@
 // Custom import API for purchase order headers. Batch code set inline.
 // Field set is templated — confirm against your BC version.
-page 50006 "BIF Purchase Order"
+page 75006 "BIF Purchase Order"
 {
     PageType = API;
     APIPublisher = 'bif';

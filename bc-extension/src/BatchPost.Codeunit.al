@@ -4,7 +4,7 @@
 //
 // Posting goes through standard BC posting codeunits, so subscribers (e.g. the
 // Merit Solutions Quality app) fire and create Quality Orders automatically.
-codeunit 50000 "BIF Batch Post"
+codeunit 75000 "BIF Batch Post"
 {
     /// Entry point invoked by the background-session runner.
     procedure RunJob(var Job: Record "BIF Batch Post Job")

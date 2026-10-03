@@ -63,7 +63,7 @@ Decide the enforcement mode via env before the orchestrator runs:
 Open [bc-extension/](../bc-extension/) in VS Code (AL extension), point `launch.json` at a
 BC **sandbox**, and publish (F5). Then verify:
 
-- [ ] Objects compile against your BC version (range **50000–50099**).
+- [ ] Objects compile against your BC version (range **75000–78999**).
 - [ ] **Number series** exist for sales/purchase/**service** invoices.
 - [ ] **`Service-Post` signature** — [BatchPost.Codeunit.al](../bc-extension/src/BatchPost.Codeunit.al) calls
       `ServicePost.PostWithLines(header, line, Ship, Consume, Invoice)`. This API
