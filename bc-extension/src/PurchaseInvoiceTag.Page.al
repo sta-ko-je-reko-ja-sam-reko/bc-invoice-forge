@@ -12,6 +12,8 @@ page 75003 "BIF Purch Invoice Tag"
     SourceTable = "Purchase Header";
     ODataKeyFields = SystemId;
     DelayedInsert = false;
+    InsertAllowed = false;
+    DeleteAllowed = false;
     Extensible = false;
 
     layout
