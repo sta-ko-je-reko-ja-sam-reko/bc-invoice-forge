@@ -12,6 +12,8 @@ page 75002 "BIF Sales Invoice Tag"
     SourceTable = "Sales Header";
     ODataKeyFields = SystemId;
     DelayedInsert = false;
+    InsertAllowed = false;
+    DeleteAllowed = false;
     Extensible = false;
 
     layout

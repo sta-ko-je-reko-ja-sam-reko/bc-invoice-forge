@@ -30,11 +30,17 @@ codeunit 75005 "BIF Service Poster" implements "BIF IDocument Poster"
     [TryFunction]
     local procedure TryPost(var ServiceHeader: Record "Service Header")
     var
+        TempServiceLine: Record "Service Line" temporary;
         ServicePost: Codeunit "Service-Post";
-        ServiceLine: Record "Service Line";
+        Ship: Boolean;
+        Consume: Boolean;
+        Invoice: Boolean;
     begin
+        // An empty temporary line set posts all lines of the document, as Service-Post (Yes/No) does.
         Clear(ServicePost);
-        ServiceLine.Reset();
-        ServicePost.PostWithLines(ServiceHeader, ServiceLine, true, false, true);
+        Ship := true;
+        Consume := false;
+        Invoice := true;
+        ServicePost.PostWithLines(ServiceHeader, TempServiceLine, Ship, Consume, Invoice);
     end;
 }

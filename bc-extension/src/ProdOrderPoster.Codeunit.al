@@ -38,6 +38,6 @@ codeunit 75007 "BIF Prod Order Poster" implements "BIF IDocument Poster"
         StatusMgt: Codeunit "Prod. Order Status Management";
     begin
         // TODO: post consumption/output first if your process requires it.
-        StatusMgt.ChangeStatusOnProdOrder(ProdOrder, ProdOrder.Status::Finished, WorkDate(), false);
+        StatusMgt.ChangeProdOrderStatus(ProdOrder, ProdOrder.Status::Finished, WorkDate(), false);
     end;
 }
