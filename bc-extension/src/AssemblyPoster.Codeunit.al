@@ -23,11 +23,20 @@ codeunit 75008 "BIF Assembly Poster" implements "BIF IDocument Poster"
                 Commit();
                 if Codeunit.Run(Codeunit::"Assembly-Post", AssemblyHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedAssemblyNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
             end;
+    end;
+
+    local procedure GetPostedAssemblyNo(OrderNo: Code[20]): Code[20]
+    var
+        PostedAssemblyHeader: Record "Posted Assembly Header";
+    begin
+        PostedAssemblyHeader.SetRange("Order No.", OrderNo);
+        if PostedAssemblyHeader.FindLast() then
+            exit(PostedAssemblyHeader."No.");
     end;
 }

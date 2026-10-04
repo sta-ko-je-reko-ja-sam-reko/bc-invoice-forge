@@ -27,7 +27,8 @@ table 75001 "BIF Post Result"
     keys
     {
         key(PK; "Entry No.") { Clustered = true; }
-        key(Batch; "Batch Code") { }
+        key(Batch; "Batch Code", "Source Document No.") { }
+        key(SourceDoc; "Source Document No.") { }
     }
 
     trigger OnInsert()

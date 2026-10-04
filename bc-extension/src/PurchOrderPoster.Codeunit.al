@@ -25,11 +25,21 @@ codeunit 75006 "BIF Purch Order Poster" implements "BIF IDocument Poster"
                 PurchHeader.Invoice := true;
                 if Codeunit.Run(Codeunit::"Purch.-Post", PurchHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedInvoiceNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
             end;
+    end;
+
+    // The order is received and invoiced; the posted invoice is the document to report.
+    local procedure GetPostedInvoiceNo(OrderNo: Code[20]): Code[20]
+    var
+        PurchInvHeader: Record "Purch. Inv. Header";
+    begin
+        PurchInvHeader.SetRange("Order No.", OrderNo);
+        if PurchInvHeader.FindLast() then
+            exit(PurchInvHeader."No.");
     end;
 }

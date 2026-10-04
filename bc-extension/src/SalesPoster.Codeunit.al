@@ -30,11 +30,20 @@ codeunit 75003 "BIF Sales Poster" implements "BIF IDocument Poster"
                 Commit();
                 if Codeunit.Run(Codeunit::"Sales-Post", SalesHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedInvoiceNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
             end;
+    end;
+
+    local procedure GetPostedInvoiceNo(PreAssignedNo: Code[20]): Code[20]
+    var
+        SalesInvoiceHeader: Record "Sales Invoice Header";
+    begin
+        SalesInvoiceHeader.SetRange("Pre-Assigned No.", PreAssignedNo);
+        if SalesInvoiceHeader.FindLast() then
+            exit(SalesInvoiceHeader."No.");
     end;
 }

@@ -178,39 +178,94 @@ codeunit 79008 "BIF Import API Tests"
     end;
 
     [Test]
+    procedure PurchaseOrderApiTakesVendorInvoiceNumber()
+    var
+        PurchaseHeader: Record "Purchase Header";
+        BatchCode: Code[20];
+        SourceDocNo: Code[35];
+    begin
+        // [GIVEN] a batch code and a source document number
+        BatchCode := TestLibrary.NewBatchCode();
+        SourceDocNo := TestLibrary.NewSourceDocNo();
+
+        // [WHEN] a purchase order header is posted to the API page with a vendor invoice number
+        InsertPurchaseOrderThroughApi(BatchCode, SourceDocNo, 'VINV-1');
+
+        // [THEN] the order carries it
+        PurchaseHeader.SetRange("BIF Batch Code", BatchCode);
+        PurchaseHeader.FindFirst();
+        Assert.AreEqual('VINV-1', PurchaseHeader."Vendor Invoice No.", 'Vendor Invoice No.');
+    end;
+
+    [Test]
     procedure PurchaseOrderImportedThroughApiIsPosted()
     var
         Job: Record "BIF Batch Post Job";
         PurchaseHeader: Record "Purchase Header";
         PurchInvHeader: Record "Purch. Inv. Header";
-        PurchaseOrderApi: TestPage "BIF Purchase Order";
         BatchCode: Code[20];
         SourceDocNo: Code[35];
     begin
-        // [GIVEN] a purchase order imported through the header and line API pages
+        // [GIVEN] Ext. Doc. No. Mandatory is on
+        TestLibrary.SetPurchExtDocNoMandatory(true);
+
+        // [GIVEN] a purchase order imported through the header and line API pages, with a vendor invoice number
         BatchCode := TestLibrary.NewBatchCode();
         SourceDocNo := TestLibrary.NewSourceDocNo();
-        PurchaseOrderApi.OpenNew();
-        PurchaseOrderApi.vendorNumber.SetValue(LibraryPurchase.CreateVendorNo());
-        PurchaseOrderApi.externalDocumentNo.SetValue(SourceDocNo);
-        PurchaseOrderApi.batchCode.SetValue(BatchCode);
-        PurchaseOrderApi.Close();
+        InsertPurchaseOrderThroughApi(BatchCode, SourceDocNo, SourceDocNo);
         PurchaseHeader.SetRange("BIF Batch Code", BatchCode);
         PurchaseHeader.FindFirst();
-        // The purchaseOrders API has no vendor invoice number field; invoicing needs one
-        // when Purchases & Payables Setup has Ext. Doc. No. Mandatory (the default).
-        PurchaseHeader.Validate("Vendor Invoice No.", SourceDocNo);
-        PurchaseHeader.Modify(true);
         InsertPurchaseLineThroughApi(PurchaseHeader."No.", LibraryInventory.CreateItemNo(), 2, 10);
 
         // [WHEN] the purchase order job runs
         TestLibrary.RunJob(Job, Job."Doc Type"::PurchaseOrder, BatchCode);
 
-        // [THEN] the imported order is received and invoiced and logged by its source document number
+        // [THEN] the imported order is received and invoiced under its vendor invoice number
         TestLibrary.AssertJobCompleted(Job, 1, 0);
         TestLibrary.AssertResult(BatchCode, SourceDocNo, true);
         PurchInvHeader.SetRange("Order No.", PurchaseHeader."No.");
         Assert.RecordCount(PurchInvHeader, 1);
+        PurchInvHeader.FindFirst();
+        Assert.AreEqual(SourceDocNo, PurchInvHeader."Vendor Invoice No.", 'Vendor Invoice No. of the posted invoice');
+        TestLibrary.AssertPostedDocNo(BatchCode, SourceDocNo, PurchInvHeader."No.");
+    end;
+
+    [Test]
+    procedure PurchaseOrderWithoutVendorInvoiceNumberFails()
+    var
+        Job: Record "BIF Batch Post Job";
+        PurchaseHeader: Record "Purchase Header";
+        BatchCode: Code[20];
+        SourceDocNo: Code[35];
+    begin
+        // [GIVEN] Ext. Doc. No. Mandatory is on and an order imported without a vendor invoice number
+        TestLibrary.SetPurchExtDocNoMandatory(true);
+        BatchCode := TestLibrary.NewBatchCode();
+        SourceDocNo := TestLibrary.NewSourceDocNo();
+        InsertPurchaseOrderThroughApi(BatchCode, SourceDocNo, '');
+        PurchaseHeader.SetRange("BIF Batch Code", BatchCode);
+        PurchaseHeader.FindFirst();
+        InsertPurchaseLineThroughApi(PurchaseHeader."No.", LibraryInventory.CreateItemNo(), 2, 10);
+
+        // [WHEN] the purchase order job runs
+        TestLibrary.RunJob(Job, Job."Doc Type"::PurchaseOrder, BatchCode);
+
+        // [THEN] BC refuses to invoice it and the error is logged
+        TestLibrary.AssertJobCompleted(Job, 0, 1);
+        TestLibrary.AssertResult(BatchCode, SourceDocNo, false);
+    end;
+
+    local procedure InsertPurchaseOrderThroughApi(BatchCode: Code[20]; SourceDocNo: Code[35]; VendorInvoiceNo: Code[35])
+    var
+        PurchaseOrderApi: TestPage "BIF Purchase Order";
+    begin
+        PurchaseOrderApi.OpenNew();
+        PurchaseOrderApi.vendorNumber.SetValue(LibraryPurchase.CreateVendorNo());
+        PurchaseOrderApi.externalDocumentNo.SetValue(SourceDocNo);
+        if VendorInvoiceNo <> '' then
+            PurchaseOrderApi.vendorInvoiceNumber.SetValue(VendorInvoiceNo);
+        PurchaseOrderApi.batchCode.SetValue(BatchCode);
+        PurchaseOrderApi.Close();
     end;
 
     local procedure InsertServiceLineThroughApi(DocumentNo: Code[20]; ItemNo: Code[20]; Quantity: Decimal)

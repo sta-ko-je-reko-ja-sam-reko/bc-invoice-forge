@@ -65,7 +65,7 @@ codeunit 79003 "BIF Job API Tests"
         // [GIVEN] a logged failure
         BatchCode := TestLibrary.NewBatchCode();
         SourceDocNo := TestLibrary.NewSourceDocNo();
-        PostLog.Log(BatchCode, SourceDocNo, false, 'Some BC error.');
+        PostLog.Log(BatchCode, SourceDocNo, '', false, 'Some BC error.');
         PostResult.SetRange("Batch Code", BatchCode);
         PostResult.FindFirst();
 

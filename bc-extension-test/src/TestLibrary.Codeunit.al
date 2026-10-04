@@ -90,11 +90,40 @@ codeunit 79000 "BIF Test Library"
         Assert.RecordCount(PostResult, 1);
         PostResult.FindFirst();
         Assert.AreEqual(ExpectedSuccess, PostResult.Success, StrSubstNo(SuccessOfDocTxt, SourceDocNo));
-        if ExpectedSuccess then
-            Assert.AreEqual('', PostResult."Error Message", 'A posted document has no error message')
-        else
+        if ExpectedSuccess then begin
+            Assert.AreEqual('', PostResult."Error Message", 'A posted document has no error message');
+            Assert.AreNotEqual('', PostResult."Posted Document No.", 'A posted document reports its posted document no.');
+        end else begin
             Assert.AreNotEqual('', PostResult."Error Message", 'A failed document carries the BC error');
+            Assert.AreEqual('', PostResult."Posted Document No.", 'A failed document has no posted document no.');
+        end;
         exit(PostResult."Error Message");
+    end;
+
+    /// <summary>Checks the posted document number logged for a source document.</summary>
+    /// <param name="BatchCode">The batch code.</param>
+    /// <param name="SourceDocNo">The source document number.</param>
+    /// <param name="ExpectedPostedDocNo">The expected posted document number.</param>
+    procedure AssertPostedDocNo(BatchCode: Code[20]; SourceDocNo: Code[35]; ExpectedPostedDocNo: Code[20])
+    var
+        PostResult: Record "BIF Post Result";
+    begin
+        PostResult.SetRange("Batch Code", BatchCode);
+        PostResult.SetRange("Source Document No.", SourceDocNo);
+        PostResult.SetRange(Success, true);
+        PostResult.FindLast();
+        Assert.AreEqual(ExpectedPostedDocNo, PostResult."Posted Document No.", 'Posted Document No.');
+    end;
+
+    /// <summary>Turns Ext. Doc. No. Mandatory on or off in Purchases &amp; Payables Setup.</summary>
+    /// <param name="Mandatory">The new setting.</param>
+    procedure SetPurchExtDocNoMandatory(Mandatory: Boolean)
+    var
+        PurchasesPayablesSetup: Record "Purchases & Payables Setup";
+    begin
+        PurchasesPayablesSetup.Get();
+        PurchasesPayablesSetup."Ext. Doc. No. Mandatory" := Mandatory;
+        PurchasesPayablesSetup.Modify();
     end;
 
     /// <summary>Asserts that a record still exists in the database (for example a document that must stay unposted).</summary>
@@ -243,12 +272,23 @@ codeunit 79000 "BIF Test Library"
     /// <param name="BatchCode">The batch code.</param>
     procedure CreateTransferOrder(var TransferHeader: Record "Transfer Header"; BatchCode: Code[20])
     var
-        Item: Record Item;
         TransferLine: Record "Transfer Line";
     begin
+        CreateTransferOrder(TransferHeader, TransferLine, BatchCode, LibraryRandom.RandInt(5));
+    end;
+
+    /// <summary>Creates a postable transfer order with one line of a given quantity, tagged with a batch code.</summary>
+    /// <param name="TransferHeader">The created transfer order.</param>
+    /// <param name="TransferLine">The created line.</param>
+    /// <param name="BatchCode">The batch code.</param>
+    /// <param name="Quantity">The line quantity (the from-location gets 10 more on stock).</param>
+    procedure CreateTransferOrder(var TransferHeader: Record "Transfer Header"; var TransferLine: Record "Transfer Line"; BatchCode: Code[20]; Quantity: Decimal)
+    var
+        Item: Record Item;
+    begin
         CreateTransferOrderHeader(TransferHeader, BatchCode);
-        CreateItemWithStock(Item, TransferHeader."Transfer-from Code", 10);
-        LibraryWarehouse.CreateTransferLine(TransferHeader, TransferLine, Item."No.", LibraryRandom.RandInt(5));
+        CreateItemWithStock(Item, TransferHeader."Transfer-from Code", Quantity + 10);
+        LibraryWarehouse.CreateTransferLine(TransferHeader, TransferLine, Item."No.", Quantity);
     end;
 
     /// <summary>Creates an assembly order (one component on stock) tagged with a batch code.</summary>

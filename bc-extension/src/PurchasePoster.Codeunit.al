@@ -23,11 +23,20 @@ codeunit 75004 "BIF Purchase Poster" implements "BIF IDocument Poster"
                 Commit();
                 if Codeunit.Run(Codeunit::"Purch.-Post", PurchHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedInvoiceNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
             end;
+    end;
+
+    local procedure GetPostedInvoiceNo(PreAssignedNo: Code[20]): Code[20]
+    var
+        PurchInvHeader: Record "Purch. Inv. Header";
+    begin
+        PurchInvHeader.SetRange("Pre-Assigned No.", PreAssignedNo);
+        if PurchInvHeader.FindLast() then
+            exit(PurchInvHeader."No.");
     end;
 }

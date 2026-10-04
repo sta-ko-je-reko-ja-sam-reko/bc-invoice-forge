@@ -41,16 +41,46 @@ table 75000 "BIF Batch Post Job"
             Caption = 'Created At';
             Editable = false;
         }
+        field(8; "Session Id"; Integer)
+        {
+            Caption = 'Session Id';
+            Editable = false;
+            // Session that runs the job; with the server instance it identifies the
+            // Active Session row, so a crashed session can be detected.
+        }
+        field(9; "Server Instance Id"; Integer)
+        {
+            Caption = 'Server Instance Id';
+            Editable = false;
+        }
+        field(10; "Started At"; DateTime)
+        {
+            Caption = 'Started At';
+            Editable = false;
+        }
+        field(11; "Finished At"; DateTime)
+        {
+            Caption = 'Finished At';
+            Editable = false;
+        }
+        field(12; "Error Message"; Text[250])
+        {
+            Caption = 'Error Message';
+            Editable = false;
+            // Why the job itself failed (blank batch code, crashed session, session not
+            // started). Per-document errors are in BIF Post Result.
+        }
     }
 
     keys
     {
         key(PK; "Entry No.") { Clustered = true; }
+        key(Status; Status) { }
+        key(Batch; "Batch Code") { }
     }
 
     trigger OnInsert()
     begin
         "Created At" := CurrentDateTime();
-        if Status = Status::Pending then;
     end;
 }

@@ -44,11 +44,20 @@ codeunit 75005 "BIF Service Poster" implements "BIF IDocument Poster"
                 Commit();
                 if Codeunit.Run(Codeunit::"BIF Service Poster", ServiceHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedInvoiceNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
             end;
+    end;
+
+    local procedure GetPostedInvoiceNo(PreAssignedNo: Code[20]): Code[20]
+    var
+        ServiceInvoiceHeader: Record "Service Invoice Header";
+    begin
+        ServiceInvoiceHeader.SetRange("Pre-Assigned No.", PreAssignedNo);
+        if ServiceInvoiceHeader.FindLast() then
+            exit(ServiceInvoiceHeader."No.");
     end;
 }

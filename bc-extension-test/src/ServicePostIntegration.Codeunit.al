@@ -29,6 +29,8 @@ codeunit 79006 "BIF Service Post Integration"
         TestLibrary.AssertResult(BatchCode, ServiceHeader."BIF Source Doc No.", true);
         ServiceInvoiceHeader.SetRange("Pre-Assigned No.", ServiceHeader."No.");
         Assert.RecordCount(ServiceInvoiceHeader, 1);
+        ServiceInvoiceHeader.FindFirst();
+        TestLibrary.AssertPostedDocNo(BatchCode, ServiceHeader."BIF Source Doc No.", ServiceInvoiceHeader."No.");
         TestLibrary.AssertNotExists(ServiceHeader, 'The posted service invoice is deleted');
     end;
 

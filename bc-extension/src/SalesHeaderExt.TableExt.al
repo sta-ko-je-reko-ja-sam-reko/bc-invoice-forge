@@ -10,4 +10,12 @@ tableextension 75000 "BIF Sales Header Ext" extends "Sales Header"
             DataClassification = CustomerContent;
         }
     }
+
+    keys
+    {
+        // Every poster filters its documents by batch code. Keys in a table extension
+        // can only hold the extension's own fields, so the document type / status
+        // filter is applied on top of this key.
+        key(BIFBatchCode; "BIF Batch Code") { }
+    }
 }

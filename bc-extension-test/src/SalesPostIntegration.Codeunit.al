@@ -30,7 +30,7 @@ codeunit 79004 "BIF Sales Post Integration"
         Assert.AreEqual(3, TestLibrary.CountResults(BatchCode), 'One result per invoice');
         for i := 1 to ArrayLen(SalesHeader) do begin
             TestLibrary.AssertResult(BatchCode, SalesHeader[i]."External Document No.", true);
-            AssertPostedOnce(SalesHeader[i]);
+            TestLibrary.AssertPostedDocNo(BatchCode, SalesHeader[i]."External Document No.", AssertPostedOnce(SalesHeader[i]));
         end;
     end;
 
@@ -115,7 +115,7 @@ codeunit 79004 "BIF Sales Post Integration"
         Assert.AreEqual(1, TestLibrary.CountResults(BatchCode), 'Results of the batch');
     end;
 
-    local procedure AssertPostedOnce(SalesHeader: Record "Sales Header")
+    local procedure AssertPostedOnce(SalesHeader: Record "Sales Header"): Code[20]
     var
         SalesInvoiceHeader: Record "Sales Invoice Header";
     begin
@@ -123,5 +123,6 @@ codeunit 79004 "BIF Sales Post Integration"
         Assert.RecordCount(SalesInvoiceHeader, 1);
         SalesInvoiceHeader.FindFirst();
         Assert.AreEqual(SalesHeader."External Document No.", SalesInvoiceHeader."External Document No.", 'External Document No. of the posted invoice');
+        exit(SalesInvoiceHeader."No.");
     end;
 }

@@ -33,6 +33,8 @@ codeunit 79005 "BIF Purch Post Integration"
             TestLibrary.AssertResult(BatchCode, PurchaseHeader[i]."Vendor Invoice No.", true);
             PurchInvHeader.SetRange("Pre-Assigned No.", PurchaseHeader[i]."No.");
             Assert.RecordCount(PurchInvHeader, 1);
+            PurchInvHeader.FindFirst();
+            TestLibrary.AssertPostedDocNo(BatchCode, PurchaseHeader[i]."Vendor Invoice No.", PurchInvHeader."No.");
         end;
     end;
 
@@ -89,6 +91,8 @@ codeunit 79005 "BIF Purch Post Integration"
         Assert.RecordCount(PurchRcptHeader, 1);
         PurchInvHeader.SetRange("Order No.", PurchaseHeader."No.");
         Assert.RecordCount(PurchInvHeader, 1);
+        PurchInvHeader.FindFirst();
+        TestLibrary.AssertPostedDocNo(BatchCode, PurchaseHeader."BIF Source Doc No.", PurchInvHeader."No.");
         TestLibrary.AssertNotExists(PurchaseHeader, 'A fully received and invoiced order is deleted');
     end;
 

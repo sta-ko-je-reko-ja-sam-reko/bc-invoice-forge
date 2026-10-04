@@ -10,11 +10,13 @@ permissionset 75000 "BIF Invoice Forge"
     Permissions =
         tabledata "BIF Batch Post Job" = RIMD,
         tabledata "BIF Post Result" = RIMD,
+        tabledata "Active Session" = R,
         table "BIF Batch Post Job" = X,
         table "BIF Post Result" = X,
         codeunit "BIF Batch Post" = X,
         codeunit "BIF Batch Post Runner" = X,
         codeunit "BIF Post Log" = X,
+        codeunit "BIF Job Session Monitor" = X,
         codeunit "BIF Sales Poster" = X,
         codeunit "BIF Purchase Poster" = X,
         codeunit "BIF Service Poster" = X,

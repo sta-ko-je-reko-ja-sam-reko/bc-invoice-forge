@@ -20,6 +20,7 @@ codeunit 75007 "BIF Prod Order Poster" implements "BIF IDocument Poster"
         StatusMgt.ChangeProdOrderStatus(Rec, Rec.Status::Finished, WorkDate(), false);
     end;
 
+    // The finished production order keeps the released order's number.
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var
         ProdOrder: Record "Production Order";
@@ -41,10 +42,10 @@ codeunit 75007 "BIF Prod Order Poster" implements "BIF IDocument Poster"
                 Commit();
                 if Codeunit.Run(Codeunit::"BIF Prod Order Poster", ProdOrder) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, DocNo, true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
             end;
     end;

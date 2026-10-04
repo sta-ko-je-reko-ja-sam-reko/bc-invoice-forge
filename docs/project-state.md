@@ -92,11 +92,18 @@ samples/ invoices.csv · invoices.json · ubl-invoice.xml · invoice.edi · part
 - Codeunits: 75000 Batch Post, 75001 Batch Post Runner, 75002 Post Log,
   75003 Sales Poster, 75004 Purchase Poster, 75005 Service Poster,
   75006 Purch Order Poster, 75007 Prod Order Poster, 75008 Assembly Poster,
-  75009 Transfer Poster
+  75009 Transfer Poster, 75010 Job Session Monitor (fails Running jobs whose
+  session ended)
+- Permission set: 75000 `BIF Invoice Forge`
 - Pages (API): 75000 batchPostJobs, 75001 postResults, 75002 salesInvoiceTags,
   75003 purchaseInvoiceTags, 75004 serviceInvoices, 75005 serviceInvoiceLines,
   75006 purchaseOrders, 75007 purchaseOrderLines, 75008 assemblyOrders,
   75009 productionOrders, 75010 transferOrders, 75011 transferOrderLines
+- `batchPostJobs` bound actions: `run` (start in a background session) and
+  `reset` (back to Pending). Reading the page fails crashed Running jobs.
+  `purchaseOrders` takes `vendorInvoiceNumber`. `postResults.postedDocumentNo`
+  is filled for every kind (posted invoice / posted assembly / finished prod.
+  order / transfer receipt no.).
 - Table extensions: 75000 Sales Header, 75001 Purchase Header, 75002 Service
   Header, 75003 Production Order, 75004 Assembly Header, 75005 Transfer Header
 

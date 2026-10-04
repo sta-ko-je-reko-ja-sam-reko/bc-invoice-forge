@@ -124,6 +124,7 @@ codeunit 79002 "BIF Batch Post Tests"
 
         // [THEN] the job fails instead of posting every untagged invoice of the company
         Assert.AreEqual(Job.Status::Failed, Job.Status, 'Status');
+        Assert.AreNotEqual('', Job."Error Message", 'The job says why it failed');
         Assert.AreEqual(0, Job."Posted Count", 'Posted Count');
         Assert.AreEqual(0, Job."Failed Count", 'Failed Count');
         TestLibrary.AssertExists(SalesHeader, 'The untagged invoice is untouched');

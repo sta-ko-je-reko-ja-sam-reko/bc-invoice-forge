@@ -21,7 +21,7 @@ codeunit 79001 "BIF Post Log Tests"
         SourceDocNo := TestLibrary.NewSourceDocNo();
 
         // [WHEN] a successful post is logged
-        PostLog.Log(BatchCode, SourceDocNo, true, '');
+        PostLog.Log(BatchCode, SourceDocNo, '', true, '');
 
         // [THEN] one result row carries the batch, the source document and success
         PostResult.SetRange("Batch Code", BatchCode);
@@ -44,10 +44,27 @@ codeunit 79001 "BIF Post Log Tests"
         SourceDocNo := TestLibrary.NewSourceDocNo();
 
         // [WHEN] a failed post is logged with the BC error
-        PostLog.Log(BatchCode, SourceDocNo, false, 'Customer is blocked.');
+        PostLog.Log(BatchCode, SourceDocNo, '', false, 'Customer is blocked.');
 
         // [THEN] the row is a failure and keeps the error text
         Assert.AreEqual('Customer is blocked.', TestLibrary.AssertResult(BatchCode, SourceDocNo, false), 'Error Message');
+    end;
+
+    [Test]
+    procedure PostedDocumentNoIsLogged()
+    var
+        BatchCode: Code[20];
+        SourceDocNo: Code[35];
+    begin
+        // [GIVEN] a batch and a source document
+        BatchCode := TestLibrary.NewBatchCode();
+        SourceDocNo := TestLibrary.NewSourceDocNo();
+
+        // [WHEN] a successful post is logged with the posted document number
+        PostLog.Log(BatchCode, SourceDocNo, 'PSI-0001', true, '');
+
+        // [THEN] the result carries it for the postResults API
+        TestLibrary.AssertPostedDocNo(BatchCode, SourceDocNo, 'PSI-0001');
     end;
 
     [Test]
@@ -62,7 +79,7 @@ codeunit 79001 "BIF Post Log Tests"
         LongError := PadStr('', 400, 'x') + 'tail';
 
         // [WHEN] it is logged
-        PostLog.Log(BatchCode, TestLibrary.NewSourceDocNo(), false, LongError);
+        PostLog.Log(BatchCode, TestLibrary.NewSourceDocNo(), '', false, LongError);
 
         // [THEN] the row keeps the first 250 characters instead of failing the insert
         PostResult.SetRange("Batch Code", BatchCode);
@@ -83,8 +100,8 @@ codeunit 79001 "BIF Post Log Tests"
         SourceDocNo := TestLibrary.NewSourceDocNo();
 
         // [WHEN] both outcomes are logged under the same batch
-        PostLog.Log(BatchCode, SourceDocNo, false, 'First attempt failed.');
-        PostLog.Log(BatchCode, SourceDocNo, true, '');
+        PostLog.Log(BatchCode, SourceDocNo, '', false, 'First attempt failed.');
+        PostLog.Log(BatchCode, SourceDocNo, '', true, '');
 
         // [THEN] the log is append-only: two rows with their own entry numbers
         PostResult.SetRange("Batch Code", BatchCode);
@@ -105,9 +122,9 @@ codeunit 79001 "BIF Post Log Tests"
         OtherBatchCode := TestLibrary.NewBatchCode();
 
         // [WHEN] results are logged to both
-        PostLog.Log(BatchCode, TestLibrary.NewSourceDocNo(), true, '');
-        PostLog.Log(BatchCode, TestLibrary.NewSourceDocNo(), true, '');
-        PostLog.Log(OtherBatchCode, TestLibrary.NewSourceDocNo(), true, '');
+        PostLog.Log(BatchCode, TestLibrary.NewSourceDocNo(), '', true, '');
+        PostLog.Log(BatchCode, TestLibrary.NewSourceDocNo(), '', true, '');
+        PostLog.Log(OtherBatchCode, TestLibrary.NewSourceDocNo(), '', true, '');
 
         // [THEN] each batch only sees its own rows (the postResults API is polled per batch code)
         Assert.AreEqual(2, TestLibrary.CountResults(BatchCode), 'Rows of the first batch');
