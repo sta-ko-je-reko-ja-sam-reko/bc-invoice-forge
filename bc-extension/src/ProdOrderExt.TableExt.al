@@ -14,4 +14,12 @@ tableextension 75003 "BIF Prod Order Ext" extends "Production Order"
             DataClassification = CustomerContent;
         }
     }
+
+    keys
+    {
+        // Every poster filters its documents by batch code. Keys in a table extension
+        // can only hold the extension's own fields, so the document type / status
+        // filter is applied on top of this key.
+        key(BIFBatchCode; "BIF Batch Code") { }
+    }
 }

@@ -19,6 +19,9 @@ struct JobDto {
     status: String,
     posted_count: i64,
     failed_count: i64,
+    /// Why the job itself failed (blank batch code, crashed session); empty otherwise.
+    #[serde(default)]
+    error_message: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -58,6 +61,9 @@ pub async fn reconcile(
                 failed = job.failed_count,
                 "job poll"
             );
+            if job.status == "Failed" && !job.error_message.is_empty() {
+                tracing::warn!(%job_id, reason = %job.error_message, "job failed");
+            }
             if job.status == "Completed" || job.status == "Failed" {
                 break;
             }

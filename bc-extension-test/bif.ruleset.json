@@ -1,0 +1,31 @@
+{
+    "name": "BC Invoice Forge Tests - project ruleset",
+    "description": "Test app of the BC Invoice Forge per-tenant extension. Never deployed to production, never submitted to AppSource.",
+    "rules": [
+        {
+            "id": "AS0084",
+            "action": "Hidden",
+            "justification": "Per-tenant extension ID range; AppSource ID range validation does not apply."
+        },
+        {
+            "id": "AS0051",
+            "action": "Hidden",
+            "justification": "AppSource listing properties (privacy statement, EULA, help, logo) are not required for a test app of a per-tenant extension."
+        },
+        {
+            "id": "AS0052",
+            "action": "Hidden",
+            "justification": "AppSource listing URL is not required for a test app of a per-tenant extension."
+        },
+        {
+            "id": "AS0092",
+            "action": "Hidden",
+            "justification": "No Application Insights resource is configured for this open-source app; telemetry is up to the installing tenant."
+        },
+        {
+            "id": "AA0247",
+            "action": "Hidden",
+            "justification": "The app does not use namespaces yet; moving every object into namespaces is a separate change."
+        }
+    ]
+}

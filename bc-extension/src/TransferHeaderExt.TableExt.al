@@ -14,4 +14,12 @@ tableextension 75005 "BIF Transfer Header Ext" extends "Transfer Header"
             DataClassification = CustomerContent;
         }
     }
+
+    keys
+    {
+        // Every poster filters its documents by batch code. Keys in a table extension
+        // can only hold the extension's own fields, so the document type / status
+        // filter is applied on top of this key.
+        key(BIFBatchCode; "BIF Batch Code") { }
+    }
 }

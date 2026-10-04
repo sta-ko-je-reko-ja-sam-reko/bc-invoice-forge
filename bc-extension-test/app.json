@@ -1,0 +1,66 @@
+{
+  "id": "6d0f3a52-8b1e-4c7a-9f2d-3e5b7c9a1f40",
+  "name": "BC Invoice Forge Tests",
+  "publisher": "bc-invoice-forge",
+  "version": "0.1.0.0",
+  "brief": "Automated tests for the BC Invoice Forge app.",
+  "description": "Test suite for BC Invoice Forge: batch-post dispatch, per-document posting and error capture, and the import API pages. Not intended for production deployment.",
+  "url": "https://github.com/sta-ko-je-reko-ja-sam-reko/bc-invoice-forge",
+  "help": "https://github.com/sta-ko-je-reko-ja-sam-reko/bc-invoice-forge",
+  "dependencies": [
+    {
+      "id": "a1b2c3d4-0000-4000-8000-000000000001",
+      "name": "BC Invoice Forge",
+      "publisher": "bc-invoice-forge",
+      "version": "0.1.0.0"
+    },
+    {
+      "id": "dd0be2ea-f733-4d65-bb34-a28f4624fb14",
+      "name": "Library Assert",
+      "publisher": "Microsoft",
+      "version": "29.0.0.0"
+    },
+    {
+      "id": "e7320ebb-08b3-4406-b1ec-b4927d3e280b",
+      "name": "Any",
+      "publisher": "Microsoft",
+      "version": "29.0.0.0"
+    },
+    {
+      "id": "5095f467-0a01-4b99-99d1-9ff1237d286f",
+      "name": "Library Variable Storage",
+      "publisher": "Microsoft",
+      "version": "29.0.0.0"
+    },
+    {
+      "id": "23de40a6-dfe8-4f80-80db-d70f83ce8caf",
+      "name": "Test Runner",
+      "publisher": "Microsoft",
+      "version": "29.0.0.0"
+    },
+    {
+      "id": "d852d5d2-a39d-4179-baeb-f99a19e32510",
+      "name": "Application Test Library",
+      "publisher": "Microsoft",
+      "version": "29.0.0.0"
+    }
+  ],
+  "platform": "1.0.0.0",
+  "application": "29.0.0.0",
+  "idRanges": [
+    {
+      "from": 79000,
+      "to": 79999
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "18.0",
+  "features": [
+    "TranslationFile",
+    "NoImplicitWith"
+  ]
+}

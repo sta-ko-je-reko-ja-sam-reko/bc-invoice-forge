@@ -1,13 +1,14 @@
 // Posts assembly orders via the standard Assembly-Post codeunit.
+// Each document runs in its own Codeunit.Run (see BIF Sales Poster for why).
 codeunit 75008 "BIF Assembly Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var
         AssemblyHeader: Record "Assembly Header";
-        AssemblyPost: Codeunit "Assembly-Post";
         PostLog: Codeunit "BIF Post Log";
         DocNos: List of [Code[20]];
         DocNo: Code[20];
+        SourceDocNo: Code[35];
     begin
         AssemblyHeader.SetRange("Document Type", AssemblyHeader."Document Type"::Order);
         AssemblyHeader.SetRange("BIF Batch Code", BatchCode);
@@ -17,20 +18,25 @@ codeunit 75008 "BIF Assembly Poster" implements "BIF IDocument Poster"
             until AssemblyHeader.Next() = 0;
 
         foreach DocNo in DocNos do
-            if AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, DocNo) then
-                if TryPost(AssemblyHeader, AssemblyPost) then begin
+            if AssemblyHeader.Get(AssemblyHeader."Document Type"::Order, DocNo) then begin
+                SourceDocNo := AssemblyHeader."BIF Source Doc No.";
+                Commit();
+                if Codeunit.Run(Codeunit::"Assembly-Post", AssemblyHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, AssemblyHeader."BIF Source Doc No.", true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedAssemblyNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, AssemblyHeader."BIF Source Doc No.", false, CopyStr(GetLastErrorText(), 1, 250));
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
+            end;
     end;
 
-    [TryFunction]
-    local procedure TryPost(var AssemblyHeader: Record "Assembly Header"; var AssemblyPost: Codeunit "Assembly-Post")
+    local procedure GetPostedAssemblyNo(OrderNo: Code[20]): Code[20]
+    var
+        PostedAssemblyHeader: Record "Posted Assembly Header";
     begin
-        Clear(AssemblyPost);
-        AssemblyPost.Run(AssemblyHeader);
+        PostedAssemblyHeader.SetRange("Order No.", OrderNo);
+        if PostedAssemblyHeader.FindLast() then
+            exit(PostedAssemblyHeader."No.");
     end;
 }

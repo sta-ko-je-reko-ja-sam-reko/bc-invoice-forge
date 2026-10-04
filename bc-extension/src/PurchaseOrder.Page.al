@@ -22,6 +22,9 @@ page 75006 "BIF Purchase Order"
             field(vendorNumber; Rec."Buy-from Vendor No.") { }
             field(orderDate; Rec."Order Date") { }
             field(currencyCode; Rec."Currency Code") { }
+            // Needed to invoice the order when Purchases & Payables Setup has
+            // Ext. Doc. No. Mandatory (the default).
+            field(vendorInvoiceNumber; Rec."Vendor Invoice No.") { }
             field(externalDocumentNo; Rec."BIF Source Doc No.") { }
             field(batchCode; Rec."BIF Batch Code") { }
         }

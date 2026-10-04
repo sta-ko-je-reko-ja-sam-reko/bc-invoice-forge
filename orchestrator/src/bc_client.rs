@@ -295,6 +295,9 @@ impl BcClient {
             "orderDate": inv.document_date,
             "currencyCode": inv.currency_code,
             "externalDocumentNo": inv.external_document_no,
+            // Vendor Invoice No.: required to invoice the order when BC's
+            // "Ext. Doc. No. Mandatory" is on (the default).
+            "vendorInvoiceNumber": inv.external_document_no,
             "batchCode": batch_code,
         });
         let created = self.post_json(&self.bif_url("purchaseOrders"), &header).await?;

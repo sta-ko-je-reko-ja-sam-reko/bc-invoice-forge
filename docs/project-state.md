@@ -74,7 +74,7 @@ bc-extension/                      AL (range 75000–78999)
     PurchOrderPoster / ProdOrderPoster / AssemblyPoster / TransferPoster .Codeunit.al
     BatchPostJob.Table.al · PostResult.Table.al
     BatchPostJob.Page.al (+ run action) · PostResult.Page.al
-    SalesInvoiceTag.Page.al · PurchaseInvoiceTag.Page.al
+    SalesInvoiceTag.Page.al · PurchInvoiceTag.Page.al
     ServiceInvoice.Page.al · ServiceInvoiceLine.Page.al
     PurchaseOrder(.Page/Line) · AssemblyOrder.Page · ProductionOrder.Page · TransferOrder(.Page/Line)
     *.TableExt.al  Sales/Purchase/Service headers, Production Order, Assembly Header, Transfer Header
@@ -92,11 +92,18 @@ samples/ invoices.csv · invoices.json · ubl-invoice.xml · invoice.edi · part
 - Codeunits: 75000 Batch Post, 75001 Batch Post Runner, 75002 Post Log,
   75003 Sales Poster, 75004 Purchase Poster, 75005 Service Poster,
   75006 Purch Order Poster, 75007 Prod Order Poster, 75008 Assembly Poster,
-  75009 Transfer Poster
+  75009 Transfer Poster, 75010 Job Session Monitor (fails Running jobs whose
+  session ended)
+- Permission set: 75000 `BIF Invoice Forge`
 - Pages (API): 75000 batchPostJobs, 75001 postResults, 75002 salesInvoiceTags,
   75003 purchaseInvoiceTags, 75004 serviceInvoices, 75005 serviceInvoiceLines,
   75006 purchaseOrders, 75007 purchaseOrderLines, 75008 assemblyOrders,
   75009 productionOrders, 75010 transferOrders, 75011 transferOrderLines
+- `batchPostJobs` bound actions: `run` (start in a background session) and
+  `reset` (back to Pending). Reading the page fails crashed Running jobs.
+  `purchaseOrders` takes `vendorInvoiceNumber`. `postResults.postedDocumentNo`
+  is filled for every kind (posted invoice / posted assembly / finished prod.
+  order / transfer receipt no.).
 - Table extensions: 75000 Sales Header, 75001 Purchase Header, 75002 Service
   Header, 75003 Production Order, 75004 Assembly Header, 75005 Transfer Header
 
@@ -115,7 +122,11 @@ samples/ invoices.csv · invoices.json · ubl-invoice.xml · invoice.edi · part
 
 - Unit tests exist (written, unrun): parsers (csv/json/xml/edi), idempotency
   hash, doc-type tag roundtrip.
-- No integration/e2e run. `bench_ingest` measures ingestion throughput locally.
+- AL: test app `bc-extension-test/` (codeunits 79000–79008): post log, batch-post
+  dispatch, API pages via `TestPage`, and per-kind posting integration tests.
+  Build with `tools/build.ps1`, run with `tools/test.ps1` on a BcContainerHelper
+  container.
+- No Rust integration/e2e run. `bench_ingest` measures ingestion throughput locally.
 - BC-side benchmark needs a sandbox or a mock (see benchmarking.md; token URL is
   overridable via `BC_TOKEN_URL`).
 
@@ -124,7 +135,7 @@ samples/ invoices.csv · invoices.json · ubl-invoice.xml · invoice.edi · part
 1. `cargo build --workspace` — fix external-crate API drift (lopdf, quick-xml).
 2. `cargo test --workspace`.
 3. `docker compose up -d`; run the ingest example against each sample format.
-4. Publish `bc-extension/` to a BC sandbox; author a permission set.
+4. Publish `bc-extension/` to a BC sandbox; run `tools/test.ps1`; extend the `BIF Invoice Forge` permission set with the standard posting permissions.
 5. Smoke-test one sales invoice end-to-end (validated→imported→posting→posted).
 6. Verify CII/EDI/PDF field mappings against real files.
 7. Verify + adapt order creation/posting per kind (start with Purchase Order).
@@ -136,4 +147,4 @@ samples/ invoices.csv · invoices.json · ubl-invoice.xml · invoice.edi · part
 - Production order refresh (create lines/components) after creation.
 - Decoupled reconciliation worker (currently inline polling per run).
 - Posting-group / dimension pre-validation (currently BC-safety-net only).
-- AL permission set + optional BC page that reads the external error store.
+- Optional BC page that reads the external error store.

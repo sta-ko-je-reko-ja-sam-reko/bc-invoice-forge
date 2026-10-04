@@ -1,13 +1,14 @@
 // Posts purchase orders (receive + invoice) via the standard Purch.-Post codeunit.
+// Each document runs in its own Codeunit.Run (see BIF Sales Poster for why).
 codeunit 75006 "BIF Purch Order Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var
         PurchHeader: Record "Purchase Header";
-        PurchPost: Codeunit "Purch.-Post";
         PostLog: Codeunit "BIF Post Log";
         DocNos: List of [Code[20]];
         DocNo: Code[20];
+        SourceDocNo: Code[35];
     begin
         PurchHeader.SetRange("Document Type", PurchHeader."Document Type"::Order);
         PurchHeader.SetRange("BIF Batch Code", BatchCode);
@@ -17,22 +18,28 @@ codeunit 75006 "BIF Purch Order Poster" implements "BIF IDocument Poster"
             until PurchHeader.Next() = 0;
 
         foreach DocNo in DocNos do
-            if PurchHeader.Get(PurchHeader."Document Type"::Order, DocNo) then
-                if TryPost(PurchHeader, PurchPost) then begin
+            if PurchHeader.Get(PurchHeader."Document Type"::Order, DocNo) then begin
+                SourceDocNo := PurchHeader."BIF Source Doc No.";
+                Commit();
+                PurchHeader.Receive := true;
+                PurchHeader.Invoice := true;
+                if Codeunit.Run(Codeunit::"Purch.-Post", PurchHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, PurchHeader."BIF Source Doc No.", true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, GetPostedInvoiceNo(DocNo), true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, PurchHeader."BIF Source Doc No.", false, CopyStr(GetLastErrorText(), 1, 250));
+                    PostLog.Log(BatchCode, SourceDocNo, '', false, GetLastErrorText());
                 end;
+            end;
     end;
 
-    [TryFunction]
-    local procedure TryPost(var PurchHeader: Record "Purchase Header"; var PurchPost: Codeunit "Purch.-Post")
+    // The order is received and invoiced; the posted invoice is the document to report.
+    local procedure GetPostedInvoiceNo(OrderNo: Code[20]): Code[20]
+    var
+        PurchInvHeader: Record "Purch. Inv. Header";
     begin
-        Clear(PurchPost);
-        PurchHeader.Receive := true;
-        PurchHeader.Invoice := true;
-        PurchPost.Run(PurchHeader);
+        PurchInvHeader.SetRange("Order No.", OrderNo);
+        if PurchInvHeader.FindLast() then
+            exit(PurchInvHeader."No.");
     end;
 }
