@@ -1,13 +1,14 @@
 // Posts purchase invoices via the standard Purch.-Post codeunit.
+// Each document runs in its own Codeunit.Run (see BIF Sales Poster for why).
 codeunit 75004 "BIF Purchase Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
     var
         PurchHeader: Record "Purchase Header";
-        PurchPost: Codeunit "Purch.-Post";
         PostLog: Codeunit "BIF Post Log";
         DocNos: List of [Code[20]];
         DocNo: Code[20];
+        SourceDocNo: Code[35];
     begin
         PurchHeader.SetRange("Document Type", PurchHeader."Document Type"::Invoice);
         PurchHeader.SetRange("BIF Batch Code", BatchCode);
@@ -17,20 +18,16 @@ codeunit 75004 "BIF Purchase Poster" implements "BIF IDocument Poster"
             until PurchHeader.Next() = 0;
 
         foreach DocNo in DocNos do
-            if PurchHeader.Get(PurchHeader."Document Type"::Invoice, DocNo) then
-                if TryPost(PurchHeader, PurchPost) then begin
+            if PurchHeader.Get(PurchHeader."Document Type"::Invoice, DocNo) then begin
+                SourceDocNo := PurchHeader."Vendor Invoice No.";
+                Commit();
+                if Codeunit.Run(Codeunit::"Purch.-Post", PurchHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, PurchHeader."Vendor Invoice No.", true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, PurchHeader."Vendor Invoice No.", false, CopyStr(GetLastErrorText(), 1, 250));
+                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
                 end;
-    end;
-
-    [TryFunction]
-    local procedure TryPost(var PurchHeader: Record "Purchase Header"; var PurchPost: Codeunit "Purch.-Post")
-    begin
-        Clear(PurchPost);
-        PurchPost.Run(PurchHeader);
+            end;
     end;
 }

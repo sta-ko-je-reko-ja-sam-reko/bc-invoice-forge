@@ -13,6 +13,14 @@ codeunit 75000 "BIF Batch Post"
         Posted: Integer;
         Failed: Integer;
     begin
+        // A blank batch code would match every untagged document of the kind in the
+        // company (all manually entered invoices, for example), so refuse to post.
+        if Job."Batch Code" = '' then begin
+            Job.Status := Job.Status::Failed;
+            Job.Modify(true);
+            exit;
+        end;
+
         Job.Status := Job.Status::Running;
         Job.Modify(true);
         Commit();

@@ -3,12 +3,16 @@
 **/target
 Cargo.lock
 
-# AL / Business Central
-bc-extension/.alpackages/
-bc-extension/.snapshots/
-bc-extension/*.app
-bc-extension/rad.json
+# AL / Business Central (app: bc-extension, tests: bc-extension-test)
+**/.alpackages/
+**/.snapshots/
+**/.alcache/
+bc-extension*/*.app
+bc-extension*/rad.json
+bc-extension*/Translations/*.g.xlf
 .altestrunner/
+# tools/test.ps1 results
+.output/
 
 # Secrets & local env
 .env

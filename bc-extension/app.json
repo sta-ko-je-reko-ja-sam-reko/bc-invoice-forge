@@ -15,5 +15,8 @@
     }
   ],
   "dependencies": [],
-  "features": ["NoImplicitWith"]
+  "features": [
+    "TranslationFile",
+    "NoImplicitWith"
+  ]
 }

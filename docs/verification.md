@@ -65,14 +65,15 @@ BC **sandbox**, and publish (F5). Then verify:
 
 - [ ] Objects compile against your BC version (range **75000–78999**).
 - [ ] **Number series** exist for sales/purchase/**service** invoices.
-- [ ] **`Service-Post` signature** — [BatchPost.Codeunit.al](../bc-extension/src/BatchPost.Codeunit.al) calls
+- [ ] **`Service-Post` signature** — [ServicePoster.Codeunit.al](../bc-extension/src/ServicePoster.Codeunit.al) calls
       `ServicePost.PostWithLines(header, line, Ship, Consume, Invoice)`. This API
       is **version-sensitive**; confirm/adjust for your BC version. (Sales-Post /
       Purch-Post are standard.)
 - [ ] **Background sessions** — the API `run` action uses `StartSession`; confirm
       the integration user may start sessions in your environment.
-- [ ] **Permissions** — a least-privilege permission set covering the custom
-      tables/pages + posting. (Not yet authored — TODO.)
+- [ ] **Permissions** — `BIF Invoice Forge` covers the custom tables, pages and
+      codeunits; add the standard permissions the integration user needs to
+      create and post the documents.
 - [ ] **Custom-field PATCH** — the orchestrator PATCHes `BIF Batch Code` via the
       `salesInvoiceTags` / `purchaseInvoiceTags` API pages; confirm the user can
       write it. (Service sets the batch code inline at create.)

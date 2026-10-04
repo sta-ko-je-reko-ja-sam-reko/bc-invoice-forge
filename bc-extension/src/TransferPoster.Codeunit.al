@@ -1,5 +1,7 @@
 // Posts transfer orders: ship, then receive, via the standard transfer posting
-// codeunits. Both run in one TryFunction so a failure rolls the pair back.
+// codeunits. Each step runs in its own Codeunit.Run (see BIF Sales Poster for why).
+// Both standard codeunits commit, so a failed receipt leaves the shipment posted
+// and the order is reported as failed.
 codeunit 75009 "BIF Transfer Poster" implements "BIF IDocument Poster"
 {
     procedure PostBatch(BatchCode: Code[20]; var Posted: Integer; var Failed: Integer)
@@ -8,6 +10,7 @@ codeunit 75009 "BIF Transfer Poster" implements "BIF IDocument Poster"
         PostLog: Codeunit "BIF Post Log";
         DocNos: List of [Code[20]];
         DocNo: Code[20];
+        SourceDocNo: Code[35];
     begin
         TransferHeader.SetRange("BIF Batch Code", BatchCode);
         if TransferHeader.FindSet() then
@@ -16,27 +19,26 @@ codeunit 75009 "BIF Transfer Poster" implements "BIF IDocument Poster"
             until TransferHeader.Next() = 0;
 
         foreach DocNo in DocNos do
-            if TransferHeader.Get(DocNo) then
-                if TryPost(TransferHeader) then begin
+            if TransferHeader.Get(DocNo) then begin
+                SourceDocNo := TransferHeader."BIF Source Doc No.";
+                if ShipAndReceive(TransferHeader) then begin
                     Posted += 1;
-                    PostLog.Log(BatchCode, TransferHeader."BIF Source Doc No.", true, '');
+                    PostLog.Log(BatchCode, SourceDocNo, true, '');
                 end else begin
                     Failed += 1;
-                    PostLog.Log(BatchCode, TransferHeader."BIF Source Doc No.", false, CopyStr(GetLastErrorText(), 1, 250));
+                    PostLog.Log(BatchCode, SourceDocNo, false, GetLastErrorText());
                 end;
+            end;
     end;
 
-    [TryFunction]
-    local procedure TryPost(var TransferHeader: Record "Transfer Header")
-    var
-        PostShipment: Codeunit "TransferOrder-Post Shipment";
-        PostReceipt: Codeunit "TransferOrder-Post Receipt";
+    local procedure ShipAndReceive(var TransferHeader: Record "Transfer Header"): Boolean
     begin
-        Clear(PostShipment);
-        PostShipment.Run(TransferHeader);
-        // Re-read; posting shipment updates the header.
+        Commit();
+        if not Codeunit.Run(Codeunit::"TransferOrder-Post Shipment", TransferHeader) then
+            exit(false);
+        // Re-read; posting the shipment updates the header.
         TransferHeader.Get(TransferHeader."No.");
-        Clear(PostReceipt);
-        PostReceipt.Run(TransferHeader);
+        Commit();
+        exit(Codeunit.Run(Codeunit::"TransferOrder-Post Receipt", TransferHeader));
     end;
 }

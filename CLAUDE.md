@@ -53,8 +53,10 @@ Design rationale: [docs/architecture.md](docs/architecture.md).
 
 ## Current status (IMPORTANT)
 
-- **Nothing has been compiled or run.** No Rust/AL toolchain was available while
-  building. Treat all code as written-but-unverified.
+- **Rust: nothing has been compiled or run.** Treat it as written-but-unverified.
+- **AL: compiles clean** (zero errors/warnings with all four analyzers, against BC
+  29 W1) and has a test app in `bc-extension-test/` (`tools/build.ps1`,
+  `tools/test.ps1`). See [bc-extension/README.md](bc-extension/README.md#build-and-test).
 - The gate before trusting it is [docs/verification.md](docs/verification.md):
   `cargo build`/`cargo test` → publish AL → smoke-test one invoice → validate
   mappings against real files → load-test/tune.
@@ -67,20 +69,23 @@ Design rationale: [docs/architecture.md](docs/architecture.md).
 - **External-crate API drift** on first compile: `lopdf` (PDF embedded-XML
   traversal) and `quick-xml` method names may need version alignment.
 - **AL version-sensitive**: `Service-Post.PostWithLines`, and production
-  posting (`Prod. Order Status Management.ChangeStatusOnProdOrder` + the missing
+  posting (`Prod. Order Status Management.ChangeProdOrderStatus` + the missing
   `Refresh Production Order` step).
 - **Order creation is templated** (purchase/production/assembly/transfer): field
   sets, transfer location setup, and production refresh need sandbox confirmation.
 - **Legacy table name**: the staging tables are still `invoice` / `invoice_line`
   though they hold all document kinds — cosmetic; rename is a future cleanup.
-- **AL permission set** for the integration user is not yet authored.
+- **AL permission set**: `BIF Invoice Forge` covers the extension's objects; the
+  standard posting permissions for the integration user are still to be chosen.
 
 ## Conventions
 
 - Rust: `Document`/`DocumentLine` are the real types; `Invoice`/`InvoiceLine`
   are back-compat aliases. sqlx uses runtime queries (no compile-time DB needed).
-- AL objects are `BIF`-prefixed, range 75000–78999. Posting always via standard
-  codeunits. New doc kind → implement `interface "BIF IDocument Poster"`.
+- AL objects are `BIF`-prefixed, range 75000–78999 (tests 79000–79999). Posting
+  always via standard codeunits, one `if Codeunit.Run(...)` per document (never a
+  `[TryFunction]`: the server rejects database writes inside one). New doc kind →
+  implement `interface "BIF IDocument Poster"` + an integration test.
 - Config is env-driven (see `.env.example`). Tuning knobs: `IMPORT_CONCURRENCY`
   (ceiling; adaptive limiter backs off on 429), `IMPORT_CHUNK_SIZE`,
   `MAX_CONCURRENT_CHUNKS`. Feature flags: `REQUIRE_PARTY_MAPPING`,
@@ -97,4 +102,6 @@ cargo run -p orchestrator                              # import + post
 cargo run -p orchestrator -- reprocess                 # retry invalid/failed only
 cargo run -p ingestion --example export_errors -- errors.csv
 cargo run -p ingestion --release --example bench_ingest -- 100000
+.\tools\build.ps1                                      # compile AL app + test app
+.\tools\test.ps1 -ContainerName bc29loc                # publish + run AL tests (elevated)
 ```
